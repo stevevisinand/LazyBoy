@@ -1,0 +1,36 @@
+<resources>
+    <string name="app_name">LazyBoy</string>
+
+    <string name="hello_world">Hello world!</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="action_add">Ajouter</string>
+    <string name="action_edtName">Changer le nom</string>
+
+
+    <string name="title_activity_configuration">Configuration</string>
+
+    <string name="dialog_AddNewConfig">Ajouter une nouvelle configuration</string>
+    <string name="dialog_AddNewConfig_Title">Nouvelle configuration</string>
+    <string name="dialog_configname">Nom de la configuration</string>
+
+    <string name="dialog_ChangeNameConfig">Changer le nom de la configuration actuelle</string>
+    <string name="dialog_ChangeNameConfig_Title">Modifier la configuration</string>
+
+    <string name="configurationActivity_ErrorLoading">Une erreur s\'est produite lors du chargement de la configuration</string>
+
+    <string name="configurationActivity_Events">Evènements</string>
+    <string name="configurationActivity_Actions">Actions</string>
+    <string name="configurationActivity_ConfirmBtn">Terminer les changements</string>
+    <string name="configurationActivity_AddEventBtn">Ajouter un événement</string>
+    <string name="configurationActivity_AddActionBtn">Ajouter une action</string>
+
+    <string name="configurationActivity_AddActionPopup_title">Sélectionnez une action</string>
+    <string name="configurationActivity_AddEventPopup_title">Sélectionnez un événement</string>
+
+    <string name="LazyHome_ErrorChanging">Une erreur s\'est produite lors de la sauvegarde de la configuration</string>
+
+    <string name="confirm">Valider</string>
+    <string name="cancel">Annuler</string>
+
+</resources>
