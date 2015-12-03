@@ -4,6 +4,9 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
+import android.net.wifi.WifiManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,6 +24,7 @@ import com.hearc.stevevisinand.lazyboy.Action_wifi;
 import com.hearc.stevevisinand.lazyboy.Configuration;
 import com.hearc.stevevisinand.lazyboy.Adapters.ConfigurationAdapter;
 import com.hearc.stevevisinand.lazyboy.EventFactory;
+import com.hearc.stevevisinand.lazyboy.EventReceiver;
 import com.hearc.stevevisinand.lazyboy.Event_nfc;
 import com.hearc.stevevisinand.lazyboy.R;
 
@@ -37,7 +41,6 @@ public class LazyHome extends AppCompatActivity {
 
         setTitle("Lazy Boy");
 
-
         configurationList = new ArrayList<Configuration>();
         initList(configurationList);
 
@@ -46,7 +49,22 @@ public class LazyHome extends AppCompatActivity {
 
         list.setAdapter(adapter);
 
+
+        //start EventReceiver
+        EventReceiver e = new EventReceiver();
+        this.registerReceiver(e,
+                new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
     }
+
+
+    @Override
+    public void onConfigurationChanged(android.content.res.Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        Log.i("CHANGECONFIG", newConfig.toString());
+
+    }
+
 
     @Override
     protected void onRestart() {
@@ -78,7 +96,6 @@ public class LazyHome extends AppCompatActivity {
                                 // current activity
 
                                 EditText edtName = (EditText)view.findViewById(R.id.edtConfigName);
-
 
                                 Log.i("ADDCONFIG", edtName.getText().toString());
                                 Configuration config = new Configuration(edtName.getText().toString());
