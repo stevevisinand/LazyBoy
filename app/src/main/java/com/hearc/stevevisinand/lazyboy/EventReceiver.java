@@ -49,7 +49,7 @@ public class EventReceiver extends BroadcastReceiver
             Log.i("EVENT-RECEIVER", "WIFI - Connected in SSID : " +this.wifiConnected.getSSID());
 
 
-            Toast toast = Toast.makeText(context, "Connected in SSID : " +this.wifiConnected.getSSID(), Toast.LENGTH_LONG);
+            Toast toast = Toast.makeText(context, "STALKER MODE ON - Connected in SSID : " +this.wifiConnected.getSSID(), Toast.LENGTH_LONG);
             toast.show();
 
         }
@@ -57,7 +57,7 @@ public class EventReceiver extends BroadcastReceiver
             Log.i("EVENT-RECEIVER", "WIFI - Disconnected in SSID : " +this.wifiConnected.getSSID());
 
 
-            Toast toast = Toast.makeText(context, "Disconnected in SSID : " +this.wifiConnected.getSSID(), Toast.LENGTH_LONG);
+            Toast toast = Toast.makeText(context, "STALKER MODE ON - Disconnected in SSID : " +this.wifiConnected.getSSID(), Toast.LENGTH_LONG);
             toast.show();
 
             this.wifiConnected = null;

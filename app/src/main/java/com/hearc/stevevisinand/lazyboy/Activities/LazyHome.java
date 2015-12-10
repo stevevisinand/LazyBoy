@@ -25,6 +25,7 @@ import com.hearc.stevevisinand.lazyboy.Configuration;
 import com.hearc.stevevisinand.lazyboy.Adapters.ConfigurationAdapter;
 import com.hearc.stevevisinand.lazyboy.EventFactory;
 import com.hearc.stevevisinand.lazyboy.EventReceiver;
+import com.hearc.stevevisinand.lazyboy.EventService;
 import com.hearc.stevevisinand.lazyboy.Event_nfc;
 import com.hearc.stevevisinand.lazyboy.R;
 
@@ -50,10 +51,10 @@ public class LazyHome extends AppCompatActivity {
         list.setAdapter(adapter);
 
 
-        //start EventReceiver
-        EventReceiver e = new EventReceiver();
-        this.registerReceiver(e,
-                new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+        //start Service
+        startService(new Intent(LazyHome.this, EventService.class));
+
+
     }
 
 
