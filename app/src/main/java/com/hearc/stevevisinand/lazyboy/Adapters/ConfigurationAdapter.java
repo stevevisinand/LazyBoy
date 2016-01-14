@@ -2,15 +2,18 @@ package com.hearc.stevevisinand.lazyboy.Adapters;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.hearc.stevevisinand.lazyboy.Activities.LazyHome;
-import com.hearc.stevevisinand.lazyboy.Configuration;
+import com.hearc.stevevisinand.lazyboy.Logic.Configuration;
 import com.hearc.stevevisinand.lazyboy.R;
 
 import java.util.ArrayList;
@@ -47,11 +50,42 @@ public class ConfigurationAdapter extends ArrayAdapter<Configuration>
         if (configuration != null)
         {
             final TextView title = (TextView) view.findViewById(R.id.title);
+            final TextView listActionsNames = (TextView) view.findViewById(R.id.textView_ActionsNames);
+            final TextView listEventsNames = (TextView) view.findViewById(R.id.textView_EventsNames);
+
+            if(configuration.isActiv())
+            {
+                Log.i("checkingactiv", "il est actif");
+                title.setTextColor(Color.GREEN);
+            }
 
             //final String versionName = String.format(res.getString(R.string.list_title), androidVersion.getVersionName());
             title.setText(configuration.getName());
-            //final String versionNumber = String.format(res.getString(R.string.list_desc), androidVersion.getVersionNumber());
+
+            String actionsNames = "";
+
+            for (String actionName : configuration.getActionsNames()) {
+                actionsNames += actionName + ", ";
+            }
+            if(actionsNames.length() > 0) {
+                actionsNames = actionsNames.substring(0, actionsNames.length() - 2);
+            }
+
+            String eventsNames = "";
+
+            for (String eventName : configuration.getEventsNames()) {
+                eventsNames += eventName + ", ";
+            }
+            if(eventsNames.length() > 0) {
+                eventsNames = eventsNames.substring(0, eventsNames.length() - 2);
+            }
+
+            listActionsNames.setText(actionsNames);
+            listEventsNames.setText(eventsNames);
+
+
         }
+
 
         //Create BTNs Listners
         Button btnDelete = (Button)view.findViewById(R.id.btnDelete);
@@ -73,6 +107,20 @@ public class ConfigurationAdapter extends ArrayAdapter<Configuration>
                 //Call home to remove from the list
                 LazyHome lazyHome = (LazyHome) context;
                 lazyHome.editConfig(configuration);
+            }
+        });
+
+        final Switch switchEnable = (Switch)view.findViewById(R.id.switchActive);
+        switchEnable.setChecked(configuration.isEnable());
+
+        switchEnable.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+
+                configuration.setEnable(switchEnable.isChecked());
+
+                //Call home to save config and reload the service
+                LazyHome lazyHome = (LazyHome) context;
+                lazyHome.reloadService();
             }
         });
 

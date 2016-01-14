@@ -2,7 +2,6 @@ package com.hearc.stevevisinand.lazyboy.Adapters;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,9 +9,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.hearc.stevevisinand.lazyboy.Action;
+import com.hearc.stevevisinand.lazyboy.Logic.Action;
 import com.hearc.stevevisinand.lazyboy.Activities.ConfigurationActivity;
-import com.hearc.stevevisinand.lazyboy.Activities.LazyHome;
 import com.hearc.stevevisinand.lazyboy.R;
 
 import java.util.ArrayList;

@@ -4,9 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.net.ConnectivityManager;
-import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,20 +12,19 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.view.Window;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.hearc.stevevisinand.lazyboy.ActionFactory;
-import com.hearc.stevevisinand.lazyboy.Action_wifi;
-import com.hearc.stevevisinand.lazyboy.Configuration;
+import com.hearc.stevevisinand.lazyboy.Logic.Configuration;
 import com.hearc.stevevisinand.lazyboy.Adapters.ConfigurationAdapter;
-import com.hearc.stevevisinand.lazyboy.EventFactory;
-import com.hearc.stevevisinand.lazyboy.EventReceiver;
 import com.hearc.stevevisinand.lazyboy.EventService;
-import com.hearc.stevevisinand.lazyboy.Event_nfc;
 import com.hearc.stevevisinand.lazyboy.R;
+import com.hearc.stevevisinand.lazyboy.Utilities.PersistanceUtils;
+
 
 import java.util.ArrayList;
 
@@ -40,23 +37,57 @@ public class LazyHome extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lazy_home);
 
-        setTitle("Lazy Boy");
+        setTitle(" Lazy Boy");
 
-        configurationList = new ArrayList<Configuration>();
-        initList(configurationList);
+        getSupportActionBar().setDisplayUseLogoEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true); // <-- added
+        getSupportActionBar().setIcon(R.mipmap.ic_launcher);
+
+        //set system bar color
+        if (Build.VERSION.SDK_INT >= 21) {
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.setStatusBarColor(getResources().getColor(R.color.primary_dark));
+        }
+
+
+
+
+
+        this.configurationList = new ArrayList<Configuration>();
+        //load saved configurations or keep a created new list if empty
+        try {
+            this.configurationList = PersistanceUtils.loadConfigs(this);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
 
         final ConfigurationAdapter adapter = new ConfigurationAdapter(this, R.layout.list_layout_config, configurationList);
         list = (ListView) findViewById(R.id.listView_configurations);
 
         list.setAdapter(adapter);
 
-
         //start Service
-        startService(new Intent(LazyHome.this, EventService.class));
-
-
+        reloadService();
     }
 
+
+    /**
+     * Relad Service and save configs to persistance
+     */
+    public void reloadService(){
+
+        //save to persistance
+        PersistanceUtils.saveConfigs(this.configurationList, this);
+
+        //reload service
+        stopService(new Intent(LazyHome.this, EventService.class));
+
+        Intent serviceIntent = new Intent(LazyHome.this, EventService.class);
+        startService(serviceIntent);
+    }
 
     @Override
     public void onConfigurationChanged(android.content.res.Configuration newConfig) {
@@ -65,7 +96,6 @@ public class LazyHome extends AppCompatActivity {
         Log.i("CHANGECONFIG", newConfig.toString());
 
     }
-
 
     @Override
     protected void onRestart() {
@@ -88,24 +118,31 @@ public class LazyHome extends AppCompatActivity {
                 //Don't forget this to acces the view's elements
                 final View view = inflater.inflate(R.layout.dialog_addconfig, null);
 
+                //force display keyboard on the edit text
+                final EditText edtName = (EditText)view.findViewById(R.id.edtConfigName);
+                edtName.requestFocus();
+                final InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+
                 builder.setView(view)
                         .setMessage(R.string.dialog_AddNewConfig)
                         .setTitle(R.string.dialog_AddNewConfig_Title)
                         .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                // if this button is clicked, close
-                                // current activity
-
-                                EditText edtName = (EditText)view.findViewById(R.id.edtConfigName);
 
                                 Log.i("ADDCONFIG", edtName.getText().toString());
                                 Configuration config = new Configuration(edtName.getText().toString());
                                 addConfig(config);
 
+                                //hide keyboard automatically
+                                imm.hideSoftInputFromWindow(edtName.getWindowToken(), 0);
                             }
                         })
                         .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
+                                //hide keyboard automatically
+                                imm.hideSoftInputFromWindow(edtName.getWindowToken(), 0);
+
                                 dialog.cancel();
                             }
                         });
@@ -121,7 +158,6 @@ public class LazyHome extends AppCompatActivity {
                 // If we got here, the user's action was not recognized.
                 // Invoke the superclass to handle it.
                 return super.onOptionsItemSelected(item);
-
         }
     }
 
@@ -132,12 +168,29 @@ public class LazyHome extends AppCompatActivity {
         return true;
     }
 
-    public void removeConfig(Configuration config)
+    public void removeConfig(final Configuration config)
     {
-        configurationList.remove(config);
+        new AlertDialog.Builder(this)
+                .setIcon(android.R.drawable.ic_delete)
+                .setTitle(R.string.dialog_DeleteConfirmation_title)
+                .setMessage(getString(R.string.dialog_DeleteConfirmation_body) + " \"" + config.getName() + "\" ?")
+                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
 
-        //reload
-        list.invalidateViews();
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        configurationList.remove(config);
+
+                        //reload
+                        list.invalidateViews();
+
+                        //restart service
+                        reloadService();
+                    }
+
+                })
+                .setNegativeButton(R.string.cancel, null)
+                .show();
     }
 
     public void editConfig(Configuration config)
@@ -147,7 +200,6 @@ public class LazyHome extends AppCompatActivity {
         intent.putExtra("EXTRA_CONFIGURATION", config);
 
         startActivityForResult(intent, 0);
-
     }
 
     @Override
@@ -156,7 +208,6 @@ public class LazyHome extends AppCompatActivity {
         //Bundle res = data.getExtras();
         //res.getString("Email") ...
         Log.i("CommInterActivities", "onActivityResult");
-
 
         Bundle extras = data.getExtras();
 
@@ -172,9 +223,13 @@ public class LazyHome extends AppCompatActivity {
         }
 
         if(original != null) {
+            //configuration edited succesfully
             int i = configurationList.indexOf(original);
             configurationList.remove(i);
             configurationList.add(i, config);
+
+            //reload service
+            reloadService();
         }
         else{
             Toast errToast = Toast.makeText(context, getResources().getString(R.string.LazyHome_ErrorChanging), Toast.LENGTH_LONG);
@@ -187,18 +242,9 @@ public class LazyHome extends AppCompatActivity {
     {
         configurationList.add(config);
         list.invalidateViews();
-    }
 
-    private void initList(ArrayList<Configuration> configs)
-    {
-        //TODO : change it to persistance
-        Configuration config1 = new Configuration("Ecole");
-        config1.addAction(ActionFactory.getAction(ActionFactory.ACTION_WIFI));
-        config1.addEvent(EventFactory.getEvent(EventFactory.EVENT_NFC));
-        configs.add(config1);
-
-        Configuration config2 = new Configuration("Nuit");
-        configs.add(config2);
+        //restart Sevice
+        reloadService();
     }
 
     private ArrayList<Configuration> configurationList;

@@ -4,5 +4,6 @@
     tools:context="com.hearc.stevevisinand.lazyboy.Activities.ConfigurationActivity">
 
     <item android:id="@+id/action_edtName" android:title="@string/action_edtName"
+        android:icon="@drawable/ic_create_white_48dp"
         android:orderInCategory="100" app:showAsAction="always" />
 </menu>

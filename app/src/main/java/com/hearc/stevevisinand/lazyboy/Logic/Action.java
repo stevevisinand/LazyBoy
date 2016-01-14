@@ -1,4 +1,6 @@
-package com.hearc.stevevisinand.lazyboy;
+package com.hearc.stevevisinand.lazyboy.Logic;
+
+import android.content.Context;
 
 import java.io.Serializable;
 
@@ -12,12 +14,14 @@ public abstract class Action implements Serializable {
         this.name = name;
     }
 
-    abstract void apply();
+    abstract void apply(Context ctx);
 
     public String getName()
     {
         return this.name;
     }
+
+    abstract boolean isActiv(Context ctx);
 
     private String name;
 }

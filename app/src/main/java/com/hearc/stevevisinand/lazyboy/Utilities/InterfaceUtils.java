@@ -1,4 +1,4 @@
-package com.hearc.stevevisinand.lazyboy;
+package com.hearc.stevevisinand.lazyboy.Utilities;
 
 import android.view.View;
 import android.view.ViewGroup;
@@ -7,7 +7,7 @@ import android.widget.ListView;
 // fix to set listview in scollview
 // http://nex-otaku-en.blogspot.ch/2010/12/android-put-listview-in-scrollview.html
 
-public class Utility {
+public class InterfaceUtils {
     public static void setListViewHeightBasedOnChildren(ListView listView) {
         ListAdapter listAdapter = listView.getAdapter();
         if (listAdapter == null) {

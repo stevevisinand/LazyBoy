@@ -2,7 +2,6 @@ package com.hearc.stevevisinand.lazyboy.Adapters;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +10,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.hearc.stevevisinand.lazyboy.Activities.ConfigurationActivity;
-import com.hearc.stevevisinand.lazyboy.Event;
+import com.hearc.stevevisinand.lazyboy.Logic.Event;
 import com.hearc.stevevisinand.lazyboy.R;
 
 import java.util.ArrayList;
@@ -49,6 +48,9 @@ public class EventAdapter extends ArrayAdapter<Event>
         {
             final TextView title = (TextView) view.findViewById(R.id.titleEvent);
             title.setText(event.getName());
+
+            final TextView description = (TextView) view.findViewById(R.id.descriptionEvent);
+            description.setText(event.getDescription());
         }
 
         //Create BTNs Listners

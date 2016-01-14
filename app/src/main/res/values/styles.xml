@@ -4,6 +4,7 @@
     <color name="light_grey">#e6eced</color>
 
     <color name="primary">#844400</color>
+    <color name="primary_dark">#7b3f00</color>
 
 
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
@@ -19,9 +20,27 @@
     <!-- ActionBar styles -->
     <style name="ActionBarTheme" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
         <item name="android:background">@color/primary</item>
-
         <!-- Support library compatibility -->
         <item name="background">@color/primary</item>
     </style>
+
+    <style name="FullscreenTheme" parent="android:Theme.NoTitleBar">
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowBackground">@null</item>
+        <item name="metaButtonBarStyle">@style/ButtonBar</item>
+        <item name="metaButtonBarButtonStyle">@style/ButtonBarButton</item>
+    </style>
+
+    <!-- Backward-compatible version of ?android:attr/buttonBarStyle -->
+    <style name="ButtonBar">
+        <item name="android:paddingLeft">2dp</item>
+        <item name="android:paddingTop">5dp</item>
+        <item name="android:paddingRight">2dp</item>
+        <item name="android:paddingBottom">0dp</item>
+        <item name="android:background">@android:drawable/bottom_bar</item>
+    </style>
+
+    <!-- Backward-compatible version of ?android:attr/buttonBarButtonStyle -->
+    <style name="ButtonBarButton" />
 
 </resources>

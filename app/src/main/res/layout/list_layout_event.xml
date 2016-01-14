@@ -5,7 +5,9 @@
     android:layout_height="wrap_content"
     android:layout_marginTop="35dp"
     android:orientation="horizontal"
-    android:padding="6dip">
+    android:padding="6dip"
+    android:paddingTop="10dip"
+    android:paddingBottom="10dip">
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -18,8 +20,17 @@
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:text="Event"
-            android:textSize="24dp"
+            android:textSize="20dp"
             android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/descriptionEvent"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:text="Event"
+            android:textSize="12dp"
+            android:paddingTop="6dp"/>
 
     </LinearLayout>
 
@@ -31,9 +42,11 @@
 
 
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Delete"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:paddingTop="12dp"
+
+            android:drawableTop="@drawable/ic_clear_black_24dp"
             android:id="@+id/btnDeleteEvent"
             />
 

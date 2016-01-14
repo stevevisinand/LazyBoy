@@ -1,7 +1,6 @@
 <resources>
     <string name="app_name">LazyBoy</string>
 
-    <string name="hello_world">Hello world!</string>
 
     <string name="action_settings">Settings</string>
     <string name="action_add">Ajouter</string>
@@ -14,8 +13,14 @@
     <string name="dialog_AddNewConfig_Title">Nouvelle configuration</string>
     <string name="dialog_configname">Nom de la configuration</string>
 
+    <string name="dialog_DeleteConfirmation_title">Suppression de la configuration</string>
+    <string name="dialog_DeleteConfirmation_body">Êtes-vous sûr de vouloir supprimer la configuration</string>
+
     <string name="dialog_ChangeNameConfig">Changer le nom de la configuration actuelle</string>
     <string name="dialog_ChangeNameConfig_Title">Modifier la configuration</string>
+
+    <string name="dialog_SetPerimeter_title">Précision de la localisation</string>
+    <string name="dialog_SetPerimeter_body">Reglez ici le périmètre actif de la localisation.</string>
 
     <string name="configurationActivity_ErrorLoading">Une erreur s\'est produite lors du chargement de la configuration</string>
 
@@ -27,10 +32,26 @@
 
     <string name="configurationActivity_AddActionPopup_title">Sélectionnez une action</string>
     <string name="configurationActivity_AddEventPopup_title">Sélectionnez un événement</string>
+    <string name="configurationActivity_AddWifiPopup_title">Sélectionnez un Wifi enregistré</string>
+
+    <string name="configurationActivity_AddNFCTagPopup_title">Enregistrer un Tag</string>
+    <string name="configurationActivity_AddNFCTagPopup_body">Passer le tag NFC sur votre téléphone pour l\'enregistrer</string>
 
     <string name="LazyHome_ErrorChanging">Une erreur s\'est produite lors de la sauvegarde de la configuration</string>
 
     <string name="confirm">Valider</string>
     <string name="cancel">Annuler</string>
+    <string name="yes">Oui</string>
 
+    <string name="precision">Précision</string>
+
+    <string name="NFCnotSupported">Votre appareil ne supporte pas le NFC.</string>
+    <string name="NFCunactivated">Veuillez activer la fonction NFC de votre appareil.</string>
+
+
+    <string name="google_api_key">AIzaSyC_qADElxB5WrfboN9_jijNTxsuhNt0IDw</string>
+
+    <string name="title_activity_splash_screen">splashScreen</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 </resources>
