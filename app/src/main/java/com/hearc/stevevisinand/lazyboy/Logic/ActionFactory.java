@@ -14,6 +14,7 @@ public class ActionFactory {
     public static String ACTION_WIFI_OFF = "Désactiver le WiFi";
     public static String ACTION_BT_ON = "Activer le Bluetooth";
     public static String ACTION_BT_OFF = "Désactiver le Bluetooth";
+    public static String ACTION_LAUNCHAPP = "Lancer une application";
 
     public static Action getAction(String actionType)
     {
@@ -51,7 +52,7 @@ public class ActionFactory {
     public static String[] getActionsCatalog()
     {
         String[] tabStr =  {ACTION_AUDIO_VIBRATEMODE, ACTION_AUDIO_SILENTMODE, ACTION_AUDIO_NORMALMODE,
-                ACTION_WIFI_ON, ACTION_WIFI_OFF, ACTION_BT_ON, ACTION_BT_OFF};
+                ACTION_WIFI_ON, ACTION_WIFI_OFF, ACTION_BT_ON, ACTION_BT_OFF, ACTION_LAUNCHAPP};
         return tabStr;
     }
 }

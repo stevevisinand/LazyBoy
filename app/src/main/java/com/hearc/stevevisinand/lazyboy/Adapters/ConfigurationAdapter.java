@@ -53,11 +53,11 @@ public class ConfigurationAdapter extends ArrayAdapter<Configuration>
             final TextView listActionsNames = (TextView) view.findViewById(R.id.textView_ActionsNames);
             final TextView listEventsNames = (TextView) view.findViewById(R.id.textView_EventsNames);
 
-            if(configuration.isActiv())
+            /*if(configuration.isProduceOne())
             {
                 Log.i("checkingactiv", "il est actif");
                 title.setTextColor(Color.GREEN);
-            }
+            }*/
 
             //final String versionName = String.format(res.getString(R.string.list_title), androidVersion.getVersionName());
             title.setText(configuration.getName());
@@ -120,7 +120,7 @@ public class ConfigurationAdapter extends ArrayAdapter<Configuration>
 
                 //Call home to save config and reload the service
                 LazyHome lazyHome = (LazyHome) context;
-                lazyHome.reloadService();
+                lazyHome.setConfigurationEnable(configuration, switchEnable.isChecked());
             }
         });
 

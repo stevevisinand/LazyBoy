@@ -80,7 +80,7 @@ public class LazyHome extends AppCompatActivity {
     public void reloadService(){
 
         //save to persistance
-        PersistanceUtils.saveConfigs(this.configurationList, this);
+        //PersistanceUtils.saveConfigs(this.configurationList, this);
 
         //reload service
         stopService(new Intent(LazyHome.this, EventService.class));
@@ -168,6 +168,47 @@ public class LazyHome extends AppCompatActivity {
         return true;
     }
 
+    public void saveConfigs(){
+
+        ArrayList<Configuration> oldConfigs = new ArrayList<Configuration>();
+        try {
+            oldConfigs = PersistanceUtils.loadConfigs(this);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        for (Configuration currentConfig: this.configurationList)
+        {
+            for (Configuration oldConfig : oldConfigs) {
+                if (currentConfig.getId() == oldConfig.getId()) {
+                    currentConfig.setProduceOne(oldConfig.isProduceOne());
+                }
+            }
+        }
+
+
+        //saveConfig
+        PersistanceUtils.saveConfigs(this.configurationList, this);
+
+        //apply
+        list.invalidateViews();
+
+        //restart service always when you save to apply
+        reloadService();
+    }
+
+    public void setConfigurationEnable(Configuration config, boolean enable){
+
+        for (Configuration c: configurationList) {
+            if(c.getId() == config.getId()){
+                c.setEnable(enable);
+            }
+        }
+        saveConfigs();
+
+    }
+
     public void removeConfig(final Configuration config)
     {
         new AlertDialog.Builder(this)
@@ -184,8 +225,9 @@ public class LazyHome extends AppCompatActivity {
                         //reload
                         list.invalidateViews();
 
-                        //restart service
-                        reloadService();
+                        //save configs
+                        saveConfigs();
+
                     }
 
                 })
@@ -228,8 +270,8 @@ public class LazyHome extends AppCompatActivity {
             configurationList.remove(i);
             configurationList.add(i, config);
 
-            //reload service
-            reloadService();
+            //save
+            saveConfigs();
         }
         else{
             Toast errToast = Toast.makeText(context, getResources().getString(R.string.LazyHome_ErrorChanging), Toast.LENGTH_LONG);
@@ -243,8 +285,8 @@ public class LazyHome extends AppCompatActivity {
         configurationList.add(config);
         list.invalidateViews();
 
-        //restart Sevice
-        reloadService();
+        //save
+        saveConfigs();
     }
 
     private ArrayList<Configuration> configurationList;

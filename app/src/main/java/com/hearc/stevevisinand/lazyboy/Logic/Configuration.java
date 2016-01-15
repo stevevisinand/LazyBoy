@@ -3,7 +3,10 @@ package com.hearc.stevevisinand.lazyboy.Logic;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.widget.Toast;
+
+import com.hearc.stevevisinand.lazyboy.Utilities.PersistanceUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -26,7 +29,8 @@ public class Configuration implements Serializable
         this.list_events = new ArrayList<Event>();
         this.list_actions = new ArrayList<Action>();
         this.isEnabled = true;
-        this.activ = false;
+
+        this.produceOne = true;
     }
 
     public boolean needGPS()
@@ -119,9 +123,13 @@ public class Configuration implements Serializable
         }
         return activs;
     }
+    public boolean isProduceOne(){
+        return this.produceOne;
+    }
 
-    public boolean isActiv(){
-        return this.activ;
+    public void setProduceOne(boolean produceOne)
+    {
+        this.produceOne = produceOne;
     }
 
     public boolean isEventsProduced(Context context, Intent intent, Double latitude, Double longitude){
@@ -138,20 +146,26 @@ public class Configuration implements Serializable
         //all event must be true !
         boolean produced = isEventsProduced(context, intent, latitude, longitude);
 
-        this.activ = isActionsActiv(context);
+        Log.i("Configuratioasds", "produced :" + produced);
 
-        if(produced && !this.activ) {
-            Toast toast = Toast.makeText(context, "Configuration : " + this.name + " Produced !", Toast.LENGTH_LONG);
-            toast.show();
+        if(produced) { // && !isActionsActiv(context)
 
-            for(Action action : list_actions){
-                action.apply(context);
+            if(!this.produceOne)
+            {
+                this.produceOne = true;
+                PersistanceUtils.saveConfig(this, context);
+
+                /*Toast toast = Toast.makeText(context, "Configuration : " + this.name + " Produced !", Toast.LENGTH_LONG);
+                toast.show();*/
+
+                for (Action action : list_actions) {
+                    action.apply(context);
+                }
             }
-
-            this.activ = true;
         }
         else{
-            this.activ = false;
+            this.produceOne = false;
+            PersistanceUtils.saveConfig(this, context);
         }
     }
 
@@ -160,6 +174,7 @@ public class Configuration implements Serializable
     private List<Event> list_events;
     private List<Action> list_actions;
     private boolean isEnabled;
-    private boolean activ;
+
+    private boolean produceOne;
 
 }

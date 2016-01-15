@@ -14,6 +14,9 @@ public class Event_placeDetect extends Event
     private double latitude;
     private int rayon; //meters
 
+    private Double lastLatitude;
+    private Double lastLongitude;
+
     private static int EARTHSIZE = 40075000; //meters
     private static double RATIO_CONVERT = 0.000009009; //src : wikipedia
 
@@ -28,6 +31,9 @@ public class Event_placeDetect extends Event
         this.latitude = latitude;
         this.longitude = longitude;
         this.rayon = rayon;
+
+        this.lastLatitude = null;
+        this.lastLongitude = null;
     }
 
     public String getDescription()
@@ -38,7 +44,14 @@ public class Event_placeDetect extends Event
     public boolean check(Context context, Intent intent, Double longitude, Double latitude)
     {
         if(longitude == null || latitude == null){
-            return false;
+
+            if(this.lastLatitude == null || this.lastLongitude ==null) {
+                return false;
+            }
+            else{
+                longitude = this.lastLongitude;
+                latitude = this.lastLongitude;
+            }
         }
 
         //preced check

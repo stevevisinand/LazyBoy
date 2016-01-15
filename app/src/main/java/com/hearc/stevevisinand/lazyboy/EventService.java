@@ -17,6 +17,7 @@ import com.hearc.stevevisinand.lazyboy.Logic.Configuration;
 import com.hearc.stevevisinand.lazyboy.Utilities.PersistanceUtils;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by stevevisinand on 03.12.15.
@@ -111,15 +112,15 @@ public class EventService extends IntentService {
 
         super.onCreate();
 
-        Toast.makeText(getBaseContext(),
+        /*Toast.makeText(getBaseContext(),
                 "EventService Started",
-                Toast.LENGTH_LONG).show();
+                Toast.LENGTH_LONG).show();*/
 
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.i("LocalService", "Received start id " + startId + ": " + intent);
+        //Log.i("LocalService", "Received start id " + startId + ": " + intent);
 
         loadConfigList();
 
@@ -139,9 +140,42 @@ public class EventService extends IntentService {
         return START_STICKY;
     }
 
+
+
     @Override
     public void onDestroy()
     {
+        /*Toast.makeText(getBaseContext(),
+                "EventService onDestroy()",
+                Toast.LENGTH_LONG).show();*/
+
+        this.unregisterReceiver(eventReceiver);
+
+        /*
+        ArrayList<Configuration> oldConfigs = new ArrayList<Configuration>();
+        //load saved configurations or keep a created new list if empty
+        try {
+            oldConfigs = PersistanceUtils.loadConfigs(this);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        for (Configuration currentConfig: this.configurationList)
+        {
+            if(currentConfig.isProduceOne()) {
+                for (Configuration oldConfig : oldConfigs) {
+                    if (currentConfig.getId() == oldConfig.getId()) {
+
+                        oldConfig.setProduceOne(currentConfig.isProduceOne());
+                    }
+                }
+            }
+        }
+
+        PersistanceUtils.saveConfigs(oldConfigs, this);
+        */
+
         super.onDestroy();
         if(locationMgr != null) {
             locationMgr.removeUpdates(onLocationChange);

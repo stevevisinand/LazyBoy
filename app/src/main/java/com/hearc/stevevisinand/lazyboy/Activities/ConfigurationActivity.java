@@ -6,6 +6,8 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
 import android.nfc.NdefMessage;
@@ -41,6 +43,7 @@ import com.hearc.stevevisinand.lazyboy.Logic.Action;
 import com.hearc.stevevisinand.lazyboy.Logic.ActionFactory;
 import com.hearc.stevevisinand.lazyboy.Adapters.ActionAdapter;
 import com.hearc.stevevisinand.lazyboy.Adapters.EventAdapter;
+import com.hearc.stevevisinand.lazyboy.Logic.Action_launchApp;
 import com.hearc.stevevisinand.lazyboy.Logic.Configuration;
 import com.hearc.stevevisinand.lazyboy.Logic.Event;
 import com.hearc.stevevisinand.lazyboy.Logic.EventFactory;
@@ -50,7 +53,12 @@ import com.hearc.stevevisinand.lazyboy.Utilities.InterfaceUtils;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
@@ -150,8 +158,16 @@ public class ConfigurationActivity extends AppCompatActivity implements GoogleAp
                         .setItems(actions, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
 
-                                //TODO : Advenced config here
-                                actionList.add(ActionFactory.getAction(actions[which]));
+
+                                if(actions[which] == ActionFactory.ACTION_LAUNCHAPP)
+                                {
+                                    //advenced config
+                                    selectApp(activity);
+                                }
+                                else
+                                {
+                                    actionList.add(ActionFactory.getAction(actions[which]));
+                                }
                                 listViewActions.invalidateViews();
                                 // fix to set listview in scollview
                                 InterfaceUtils.setListViewHeightBasedOnChildren(listViewActions);
@@ -203,6 +219,54 @@ public class ConfigurationActivity extends AppCompatActivity implements GoogleAp
             }
         });
 
+    }
+
+    private void selectApp(Activity activity)
+    {
+
+        Log.i("selectApp", "coucou");
+        final PackageManager pm = getPackageManager();
+
+        //get a list of installed apps.
+        List<ApplicationInfo> packages = pm.getInstalledApplications(PackageManager.GET_META_DATA);
+
+        //use a treeMap to show values in alphabetical order
+        TreeMap<String, String> appInfos = new TreeMap<>();
+        for (ApplicationInfo packageInfo : packages) {
+            appInfos.put(packageInfo.loadLabel(pm).toString(), packageInfo.packageName.toString());
+        }
+
+        String[] appnames1 = new String[appInfos.size()];
+        String[] apppackages1 = new String[appInfos.size()];
+
+        int i=0;
+        for(Map.Entry<String,String> entry : appInfos.entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue();
+
+            appnames1[i] = key;
+            apppackages1[i] = value;
+            i++;
+        }
+
+        final String[] appnames = appnames1;
+        final String[] apppackages = apppackages1;
+
+        //Construct dialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        builder.setTitle(R.string.configurationActivity_AddActionPopup_title)
+                .setItems(appnames, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        Action a = (Action)new Action_launchApp(appnames[which], apppackages[which]);
+                        actionList.add(a);
+                        listViewActions.invalidateViews();
+                        // fix to set listview in scollview
+                        InterfaceUtils.setListViewHeightBasedOnChildren(listViewActions);
+                    }
+                });
+
+        builder.show();
     }
 
     @Override

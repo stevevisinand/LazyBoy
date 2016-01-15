@@ -12,6 +12,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.hearc.stevevisinand.lazyboy.Logic.Configuration;
+import com.hearc.stevevisinand.lazyboy.Utilities.PersistanceUtils;
 
 import java.util.ArrayList;
 
@@ -29,6 +30,8 @@ public class EventReceiver extends BroadcastReceiver
     private Context currentContext;
     private Intent currentIntent;
 
+    private boolean firstCheck;
+
     public EventReceiver(ArrayList configList)
     {
         super();
@@ -36,6 +39,7 @@ public class EventReceiver extends BroadcastReceiver
         this.curentLatitude = null;
         this.curentLongitude = null;
         this.currentIntent = null;
+        this.firstCheck = true;
     }
 
     public void positionChanged(double latitude, double longitude)
@@ -67,9 +71,6 @@ public class EventReceiver extends BroadcastReceiver
         //checkWifi(connMgr, context);
 
 
-        Toast.makeText(context,
-                "EventReceiver onReceive",
-                Toast.LENGTH_LONG).show();
 
         this.currentContext = context;
         this.currentIntent = intent;
@@ -83,14 +84,26 @@ public class EventReceiver extends BroadcastReceiver
         //Context is neccessary to apply settings
         if(this.currentContext != null)
         {
-            for (Configuration config: configList)
-            {
-                if(config.isEnable()) //check only if config is activated !
-                {
-                    config.check(this.currentContext, this.currentIntent, this.curentLongitude, this.curentLatitude);
+            if(firstCheck){
+                firstCheck = false;
+                //firstCheck response always with false ...
+            }
+            else {
+                try {
+                    this.configList = PersistanceUtils.loadConfigs(this.currentContext);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                for (Configuration config : configList) {
+                    if (config.isEnable()) //check only if config is activated !
+                    {
+                        config.check(this.currentContext, this.currentIntent, this.curentLongitude, this.curentLatitude);
+                    }
                 }
             }
         }
+
     }
 
 

@@ -2,6 +2,7 @@ package com.hearc.stevevisinand.lazyboy.Utilities;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.hearc.stevevisinand.lazyboy.Logic.Configuration;
 
@@ -64,6 +65,34 @@ public class PersistanceUtils {
         Log.i("PERSISTANCE", "Loading finished");
 
         return configs;
+    }
+
+    public static void saveConfig(Configuration config, Context context)
+    {
+
+        try {
+            ArrayList<Configuration> oldConfigs = loadConfigs(context);
+
+            Configuration oldConfig = null;
+            for (Configuration c: oldConfigs) {
+                if(c.getId() == config.getId()){
+                    oldConfig = c;
+                }
+            }
+
+            oldConfigs.remove(oldConfig);
+            oldConfigs.add(config);
+
+            saveConfigs(oldConfigs, context);
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+
     }
 
 
