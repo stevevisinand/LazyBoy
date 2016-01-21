@@ -53,8 +53,6 @@ public class LazyHome extends AppCompatActivity {
 
 
 
-
-
         this.configurationList = new ArrayList<Configuration>();
         //load saved configurations or keep a created new list if empty
         try {

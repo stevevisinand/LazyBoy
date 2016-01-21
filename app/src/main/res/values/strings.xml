@@ -29,6 +29,8 @@
     <string name="configurationActivity_ConfirmBtn">Terminer les changements</string>
     <string name="configurationActivity_AddEventBtn">Ajouter un événement</string>
     <string name="configurationActivity_AddActionBtn">Ajouter une action</string>
+    <string name="configurationActivity_AddAppLaunchPopup_title">Selectionnez une application</string>
+
 
     <string name="configurationActivity_AddActionPopup_title">Sélectionnez une action</string>
     <string name="configurationActivity_AddEventPopup_title">Sélectionnez un événement</string>

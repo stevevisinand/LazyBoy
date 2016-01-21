@@ -223,9 +223,7 @@ public class ConfigurationActivity extends AppCompatActivity implements GoogleAp
 
     private void selectApp(Activity activity)
     {
-
-        Log.i("selectApp", "coucou");
-        final PackageManager pm = getPackageManager();
+        PackageManager pm = getPackageManager();
 
         //get a list of installed apps.
         List<ApplicationInfo> packages = pm.getInstalledApplications(PackageManager.GET_META_DATA);
@@ -233,7 +231,10 @@ public class ConfigurationActivity extends AppCompatActivity implements GoogleAp
         //use a treeMap to show values in alphabetical order
         TreeMap<String, String> appInfos = new TreeMap<>();
         for (ApplicationInfo packageInfo : packages) {
-            appInfos.put(packageInfo.loadLabel(pm).toString(), packageInfo.packageName.toString());
+            if(pm.getLaunchIntentForPackage(packageInfo.packageName) != null) {
+                //If you're here, then this is a launch-able app
+                appInfos.put(packageInfo.loadLabel(pm).toString(), packageInfo.packageName.toString());
+            }
         }
 
         String[] appnames1 = new String[appInfos.size()];
@@ -254,7 +255,7 @@ public class ConfigurationActivity extends AppCompatActivity implements GoogleAp
 
         //Construct dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-        builder.setTitle(R.string.configurationActivity_AddActionPopup_title)
+        builder.setTitle(R.string.configurationActivity_AddAppLaunchPopup_title)
                 .setItems(appnames, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
 
